@@ -7,14 +7,21 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "css-loader": "latest",
+    "mysql2": "^3.4.0",
     "next": "latest",
+    "postcss-loader": "latest",
+    "postcss-preset-env": "^8.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "serverless-mysql": "^1.5.5",
+    "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
-    "@types/node": "^12.12.21",
+    "@types/mysql": "^2.15.21",
+    "@types/node": "^12.20.55",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
-    "typescript": "^4.8.3"
+    "typescript": "^4.9.5"
   }
 }

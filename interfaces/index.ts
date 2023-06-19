@@ -7,4 +7,5 @@
 export type User = {
   id: number
   name: string
+  discord_id: number
 }
