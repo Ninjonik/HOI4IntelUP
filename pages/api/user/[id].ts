@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             try {
                 const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
                     headers: {
-                        Authorization: 'Bot MTA2Mzc2NjU5ODE5Nzk4MTIxNQ.GXa8q4.9TUdG0XSLXAqIaqG7DKRBjQcwuYU5DJLCmscEE',
+                        Authorization: `Bot ${process.env.BOT_TOKEN}`,
                     },
                 });
 
