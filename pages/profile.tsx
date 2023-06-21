@@ -1,17 +1,29 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Link from 'next/link';
+import Layout from '../components/Layout';
+import { NextPage } from 'next';
 
-const ProfilePage = () => (
+interface ProfilePageProps {
+    'bodyClass': string
+}
+
+const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
+    const [user, setUser] = useState(null);
+
+    return (
         <div className="wrapper">
             <section className="section-profile-cover section-shaped my-0">
-                <img className="bg-image" src="/img/pages/mohamed.jpg" style={{ width: '100%', height: 'auto' }}></img>
-                    <div className="separator separator-bottom separator-skew">
-                        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <polygon className="fill-secondary" points="2560 0 2560 100 0 100"></polygon>
-                        </svg>
-                    </div>
+                {/* Circles background */}
+                <img className="bg-image" src="/img/pages/mohamed.jpg" style={{ width: '100%' }} />
+                {/* SVG separator */}
+                <div className="separator separator-bottom separator-skew">
+                    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <polygon className="fill-secondary" points="2560 0 2560 100 0 100"></polygon>
+                    </svg>
+                </div>
             </section>
+
             <section className="section bg-secondary">
                 <div className="container">
                     <div className="card card-profile shadow mt--300">
@@ -20,7 +32,7 @@ const ProfilePage = () => (
                                 <div className="col-lg-3 order-lg-2">
                                     <div className="card-profile-image">
                                         <a href="javascript:;">
-                                            <img src="/img/faces/team-4.jpg" className="rounded-circle" style={{ width: '100%', height: 'auto' }} />
+                                            <img src="/img/faces/team-4.jpg" className="rounded-circle" />
                                         </a>
                                     </div>
                                 </div>
@@ -49,21 +61,14 @@ const ProfilePage = () => (
                             </div>
                             <div className="text-center mt-5">
                                 <h3>Jessica Jones<span className="font-weight-light">, 27</span></h3>
-                                <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>Bucharest,
-                                    Romania
-                                </div>
-                                <div className="h6 mt-4"><i className="ni business_briefcase-24 mr-2"></i>Solution
-                                    Manager - Creative Tim Officer
-                                </div>
+                                <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>Bucharest, Romania</div>
+                                <div className="h6 mt-4"><i className="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer</div>
                                 <div><i className="ni education_hat mr-2"></i>University of Computer Science</div>
                             </div>
                             <div className="mt-5 py-5 border-top text-center">
                                 <div className="row justify-content-center">
                                     <div className="col-lg-9">
-                                        <p>An artist of considerable range, Ryan — the name taken by Melbourne-raised,
-                                            Brooklyn-based Nick Murphy — writes, performs and records all of his own
-                                            music, giving it a warm, intimate feel with a solid groove structure. An
-                                            artist of considerable range.</p>
+                                        <p>An artist of considerable range, Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. An artist of considerable range.</p>
                                         <a href="javascript:;">Show more</a>
                                     </div>
                                 </div>
@@ -73,6 +78,9 @@ const ProfilePage = () => (
                 </div>
             </section>
         </div>
-)
+    );
+};
 
-export default ProfilePage
+ProfilePage.bodyClass = 'profile-page';
+
+export default ProfilePage;
