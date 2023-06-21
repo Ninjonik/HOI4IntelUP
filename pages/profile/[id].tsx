@@ -1,15 +1,35 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import axios from 'axios';
-import Link from 'next/link';
-import Layout from '../components/Layout';
-import { NextPage } from 'next';
+import {useRouter} from 'next/router';
+import {NextPage} from 'next';
 
 interface ProfilePageProps {
-    'bodyClass': string
+    bodyClass: string;
 }
 
 const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
+    const router = useRouter();
+    const { id } = router.query;
     const [user, setUser] = useState(null);
+
+
+
+    useEffect(() => {
+        // Fetch user data from the API based on the ID
+
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get(`/api/user/${id}`);
+                setUser(response.data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        if (id) {
+            fetchUserData();
+        }
+    }, [id]);
 
     return (
         <div className="wrapper">
@@ -23,7 +43,7 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                     </svg>
                 </div>
             </section>
-
+            {user && (
             <section className="section bg-secondary">
                 <div className="container">
                     <div className="card card-profile shadow mt--300">
@@ -32,7 +52,7 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 <div className="col-lg-3 order-lg-2">
                                     <div className="card-profile-image">
                                         <a href="javascript:;">
-                                            <img src="/img/faces/team-4.jpg" className="rounded-circle" />
+                                            <img src={user.avatar} className="rounded-circle" />
                                         </a>
                                     </div>
                                 </div>
@@ -60,8 +80,8 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 </div>
                             </div>
                             <div className="text-center mt-5">
-                                <h3>Jessica Jones<span className="font-weight-light">, 27</span></h3>
-                                <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>Bucharest, Romania</div>
+                                <h3>{user.name}<span className="font-weight-light">, 27</span></h3>
+                                <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>{user.discord_id}</div>
                                 <div className="h6 mt-4"><i className="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer</div>
                                 <div><i className="ni education_hat mr-2"></i>University of Computer Science</div>
                             </div>
@@ -77,6 +97,7 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                     </div>
                 </div>
             </section>
+            )}
         </div>
     );
 };

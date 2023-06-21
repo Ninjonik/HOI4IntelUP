@@ -20,7 +20,24 @@ export default async function handler(req, res) {
         // Perform the necessary database query or data retrieval to fetch the user by ID
         const user = await getUserById(id);
 
-        console.log(user);
+        let discordId = user["discord_id"];
+
+        const fetchAvatar = async (discordId) => {
+            try {
+                const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
+                    headers: {
+                        Authorization: 'Bot MTA2Mzc2NjU5ODE5Nzk4MTIxNQ.GXa8q4.9TUdG0XSLXAqIaqG7DKRBjQcwuYU5DJLCmscEE',
+                    },
+                });
+
+                return `https://cdn.discordapp.com/avatars/${discordId}/${response.data.avatar}.png`;
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+                return null;
+            }
+        };
+
+        user["avatar"] = await fetchAvatar(discordId);
 
         // Return the user data as a JSON response
         return res.status(200).json(user);
