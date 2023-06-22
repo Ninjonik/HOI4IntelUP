@@ -1,31 +1,96 @@
 import connection from  '../../../libs/db';
+import axios from "axios";
+/* global BigInt */
 
-export async function getPlayerById(id) {
+export async function getUserById(id) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM players WHERE id = ?';
+        const query = 'SELECT *, CAST(discord_id AS CHAR) AS discord_id FROM players WHERE id = ?';
         connection.query(query, [id], (error, results) => {
             if (error) {
                 reject(error);
+                console.log(error);
             } else {
-                resolve(results[0]); // Assuming the query returns a single user
+                resolve(results[0]);
             }
         });
     });
 }
+
+export async function getUserStats(id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(id) AS count FROM player_records WHERE player_id = ?';
+        connection.query(query, [id], (error, results) => {
+            if (error) {
+                reject(error);
+                console.log(error);
+            } else {
+                if (Array.isArray(results) && results.length > 0) {
+                    resolve(results[0]);
+                } else {
+                    resolve([]); // Return empty array when no results are found
+                }
+            }
+        });
+    });
+}
+
+export async function getUserGames(id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM player_records WHERE player_id = ?';
+        connection.query(query, [id], (error, results) => {
+            if (error) {
+                reject(error);
+                console.log(error);
+            } else {
+                if (Array.isArray(results) && results.length > 0) {
+                    resolve(results);
+                } else {
+                    resolve([]); // Return empty array when no results are found
+                }
+            }
+        });
+    });
+}
+
 
 export default async function handler(req, res) {
     const { id } = req.query;
 
     try {
         // Perform the necessary database query or data retrieval to fetch the user by ID
-        const user = await getPlayerById(id);
+        const user = await getUserById(id);
 
-        console.log(user);
+        const discordId = user["discord_id"];
+
+        const fetchAvatar = async (discordId) => {
+            try {
+                const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
+                    headers: {
+                        Authorization: `Bot ${process.env.BOT_TOKEN}`,
+                    },
+                });
+
+                return response.data;
+            } catch (error) {
+                console.log(discordId);
+                console.error('Error fetching avatar:');
+                return null;
+            }
+        };
+
+        console.log(discordId, "nice");
+        const data = await fetchAvatar(discordId);
+        const stats = await getUserStats(discordId);
+        const games = await getUserGames(discordId);
+        user["avatar"] = `https://cdn.discordapp.com/avatars/${discordId}/${data.avatar}.png`;
+        user["discord_name"] = data["username"];
+        user["games"] = stats ? stats["count"] : 0;
+        console.log(games);
 
         // Return the user data as a JSON response
         return res.status(200).json(user);
     } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user data:');
         return res.status(500).json({ message: 'Internal server error' });
     }
 }

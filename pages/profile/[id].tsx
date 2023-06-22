@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useRouter} from 'next/router';
 import {NextPage} from 'next';
+import {redirect} from "next/navigation";
 
 interface ProfilePageProps {
     bodyClass: string;
@@ -12,20 +13,19 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
     const { id } = router.query;
     const [user, setUser] = useState(null);
 
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get(`/api/player/${id}`);
+            setUser(response.data);
+            console.log("Data fetched successfully");
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            router.push('/404');
+        }
+    };
 
 
     useEffect(() => {
-        // Fetch user data from the API based on the ID
-
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get(`/api/user/${id}`);
-                setUser(response.data);
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
         if (id) {
             fetchUserData();
         }
@@ -65,11 +65,11 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 <div className="col-lg-4 order-lg-1">
                                     <div className="card-profile-stats d-flex justify-content-center">
                                         <div>
-                                            <span className="heading">22</span>
-                                            <span className="description">Friends</span>
+                                            <span className="heading">{user.games}</span>
+                                            <span className="description">Games</span>
                                         </div>
                                         <div>
-                                            <span className="heading">10</span>
+                                            <span className="heading">12</span>
                                             <span className="description">Photos</span>
                                         </div>
                                         <div>
@@ -80,17 +80,37 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 </div>
                             </div>
                             <div className="text-center mt-5">
-                                <h3>{user.name}<span className="font-weight-light">, 27</span></h3>
+                                <h3>{user.discord_name}<span className="font-weight-light"> {user.rating*100}%</span></h3>
                                 <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>{user.discord_id}</div>
                                 <div className="h6 mt-4"><i className="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer</div>
                                 <div><i className="ni education_hat mr-2"></i>University of Computer Science</div>
                             </div>
                             <div className="mt-5 py-5 border-top text-center">
                                 <div className="row justify-content-center">
-                                    <div className="col-lg-9">
-                                        <p>An artist of considerable range, Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. An artist of considerable range.</p>
-                                        <a href="javascript:;">Show more</a>
-                                    </div>
+                                    <table className="table">
+                                        <thead>
+                                        <tr>
+                                            <th className="text-center">#</th>
+                                            <th>Rating</th>
+                                            <th>Country</th>
+                                            <th>Host</th>
+                                            <th>Server</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {user.games && user.games.map((game, index) => (
+                                            <tr key={index}>
+                                                <td>{game["id"]}</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

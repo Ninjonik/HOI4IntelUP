@@ -2,7 +2,7 @@ import connection from  '../../../libs/db';
 
 export async function getUserById(id) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM users WHERE id = ?';
+        const query = 'SELECT *, CAST(discord_id AS CHAR) AS discord_id FROM users WHERE id = ?';
         connection.query(query, [id], (error, results) => {
             if (error) {
                 reject(error);
@@ -30,14 +30,16 @@ export default async function handler(req, res) {
                     },
                 });
 
-                return `https://cdn.discordapp.com/avatars/${discordId}/${response.data.avatar}.png`;
+                return response.data;
             } catch (error) {
                 console.error('Error fetching avatar:', error);
                 return null;
             }
         };
 
-        user["avatar"] = await fetchAvatar(discordId);
+        const data = await fetchAvatar(discordId);
+        user["avatar"] = `https://cdn.discordapp.com/avatars/${discordId}/${data.avatar}.png`
+        user["discord_name"] = data.username
 
         // Return the user data as a JSON response
         return res.status(200).json(user);
