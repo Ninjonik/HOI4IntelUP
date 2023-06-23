@@ -58,23 +58,14 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 </div>
                                 <div className="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
                                     <div className="card-profile-actions py-4 mt-lg-0">
-                                        <a href="#" className="btn btn-sm btn-info mr-4">Connect</a>
-                                        <a href="#" className="btn btn-sm btn-default float-right">Message</a>
+
                                     </div>
                                 </div>
                                 <div className="col-lg-4 order-lg-1">
                                     <div className="card-profile-stats d-flex justify-content-center">
                                         <div>
-                                            <span className="heading">{user.games}</span>
+                                            <span className="heading">{user.stats}</span>
                                             <span className="description">Games</span>
-                                        </div>
-                                        <div>
-                                            <span className="heading">12</span>
-                                            <span className="description">Photos</span>
-                                        </div>
-                                        <div>
-                                            <span className="heading">89</span>
-                                            <span className="description">Comments</span>
                                         </div>
                                     </div>
                                 </div>
@@ -82,8 +73,6 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                             <div className="text-center mt-5">
                                 <h3>{user.discord_name}<span className="font-weight-light"> {user.rating*100}%</span></h3>
                                 <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>{user.discord_id}</div>
-                                <div className="h6 mt-4"><i className="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer</div>
-                                <div><i className="ni education_hat mr-2"></i>University of Computer Science</div>
                             </div>
                             <div className="mt-5 py-5 border-top text-center">
                                 <div className="row justify-content-center">
@@ -102,11 +91,11 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                         {user.games && user.games.map((game, index) => (
                                             <tr key={index}>
                                                 <td>{game["id"]}</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td>{game["rating"]}</td>
+                                                <td>{game["country"]}</td>
+                                                <td>{game["discord_name"]}</td>
+                                                <td>{game["guild_name"]}</td>
+                                                <td>{game["updated_at"]}</td>
                                             </tr>
                                         ))}
                                         </tbody>

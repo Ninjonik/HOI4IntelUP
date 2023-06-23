@@ -36,7 +36,7 @@ export async function getUserStats(id) {
 
 export async function getUserGames(id) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM player_records WHERE player_id = ?';
+        const query = 'SELECT r.*, s.guild_name, p.discord_name FROM player_records as r INNER JOIN settings as s on r.guild_id=s.guild_id INNER JOIN players as p on r.host_id=p.discord_id WHERE player_id = ? ORDER BY id DESC';
         connection.query(query, [id], (error, results) => {
             if (error) {
                 reject(error);
@@ -72,7 +72,6 @@ export default async function handler(req, res) {
 
                 return response.data;
             } catch (error) {
-                console.log(discordId);
                 console.error('Error fetching avatar:');
                 return null;
             }
@@ -84,13 +83,15 @@ export default async function handler(req, res) {
         const games = await getUserGames(discordId);
         user["avatar"] = `https://cdn.discordapp.com/avatars/${discordId}/${data.avatar}.png`;
         user["discord_name"] = data["username"];
-        user["games"] = stats ? stats["count"] : 0;
-        console.log(games);
+        user["stats"] = stats ? stats["count"] : 0;
+        user["games"] = games ? games : [];
+        console.log(user);
 
         // Return the user data as a JSON response
         return res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching user data:');
+        console.log(id);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
