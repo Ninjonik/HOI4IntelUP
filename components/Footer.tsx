@@ -10,50 +10,29 @@ const Footer = () => {
                         <h4 className="mb-0 font-weight-light">Let's get in touch on any of these platforms.</h4>
                     </div>
                     <div className="col-lg-6 text-lg-center btn-wrapper">
-                        <button rel="nofollow"
-                                className="btn btn-icon-only btn-twitter rounded-circle" data-toggle="tooltip"
-                                data-original-title="Follow us">
-                            <span className="btn-inner--icon"><i className="fa fa-twitter"></i></span>
-                        </button>
-                        <button rel="nofollow"
-                                className="btn-icon-only rounded-circle btn btn-facebook" data-toggle="tooltip"
-                                data-original-title="Like us">
-                            <span className="btn-inner--icon"><i className="fab fa-facebook"></i></span>
-                        </button>
-                        <button rel="nofollow"
+                        <a rel="nofollow" href="https://hoi.theorganization.eu/" target="_blank"
                                 className="btn btn-icon-only btn-dribbble rounded-circle" data-toggle="tooltip"
-                                data-original-title="Follow us">
+                                data-original-title="Check the main page">
                             <span className="btn-inner--icon"><i className="fa fa-dribbble"></i></span>
-                        </button>
-                        <button rel="nofollow"
+                        </a>
+                        <a rel="nofollow" href="https://github.com/NinjonikSVK/HOI4IntelUP" target="_blank"
                                 className="btn btn-icon-only btn-github rounded-circle" data-toggle="tooltip"
                                 data-original-title="Star on Github">
                             <span className="btn-inner--icon"><i className="fa fa-github"></i></span>
-                        </button>
+                        </a>
+                        <a rel="nofollow" href="https://discord.gg/world-war-community-820918304176340992" target="_blank"
+                           className="btn btn-icon-only btn-github rounded-circle" data-toggle="tooltip"
+                           data-original-title="Join Discord">
+                            <span className="btn-inner--icon"><i className="fa-brands fa-discord"></i></span>
+                        </a>
                     </div>
                 </div>
                 <div>
                     <div className="row align-items-center justify-content-md-between">
                         <div className="col-md-6">
                             <div className="copyright">
-                                &copy; 2020 <a href="" target="_blank">Creative Tim</a>.
+                                &copy; 2023 <a href="" target="_blank">HOI4Intel</a>, Design by: Creative Tim.
                             </div>
-                        </div>
-                        <div className="col-md-6">
-                            <ul className="nav nav-footer justify-content-end">
-                                <li className="nav-item">
-                                    <a href="" className="nav-link" target="_blank">Creative Tim</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a href="" className="nav-link" target="_blank">About Us</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a href="" className="nav-link" target="_blank">Blog</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a href="" className="nav-link" target="_blank">License</a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 </div>

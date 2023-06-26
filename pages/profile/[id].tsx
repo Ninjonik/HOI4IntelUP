@@ -34,13 +34,24 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
     return (
         <div className="wrapper">
             <section className="section-profile-cover section-shaped my-0">
-                {/* Circles background */}
-                <img className="bg-image" src="/img/pages/mohamed.jpg" style={{ width: '100%' }} />
-                {/* SVG separator */}
-                <div className="separator separator-bottom separator-skew">
-                    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <polygon className="fill-secondary" points="2560 0 2560 100 0 100"></polygon>
-                    </svg>
+                <div className="section section-hero section-shaped">
+                    <div className="shape shape-style-3 shape-default">
+                        <span className="span-150"></span>
+                        <span className="span-50"></span>
+                        <span className="span-50"></span>
+                        <span className="span-75"></span>
+                        <span className="span-100"></span>
+                        <span className="span-75"></span>
+                        <span className="span-50"></span>
+                        <span className="span-100"></span>
+                        <span className="span-50"></span>
+                        <span className="span-100"></span>
+                    </div>
+                    <div className="separator separator-bottom separator-skew">
+                        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <polygon className="fill-secondary" points="2560 0 2560 100 0 100"></polygon>
+                        </svg>
+                    </div>
                 </div>
             </section>
             {user && (

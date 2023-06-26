@@ -29,13 +29,12 @@ export default async function searchUser(req: NextApiRequest, res: NextApiRespon
             if (player && player['id']) {
                 // If a matching player is found, construct the redirect URL
                 const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL}/profile/${player['id']}`;
-                console.log(redirectUrl);
 
                 // Return a JSON response with the redirect URL
                 res.status(200).json({ redirectUrl });
             } else {
                 // If no matching player is found, return a JSON response with the error URL
-                res.status(200).json({ redirectUrl: '/profile/error' });
+                res.status(404).json({ redirectUrl: '/profile/error' });
             }
         } catch (error) {
             console.error(error);

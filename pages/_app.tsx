@@ -25,8 +25,8 @@ function MyApp({ Component, pageProps }: CustomAppProps) {
     return (
         <>
             <Head>
-                <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-                <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" />
+                <title>HOI4Intel | Database</title>
+                <link rel="icon" href="/favicon.ico" sizes="any" />
             </Head>
             <div className={bodyClass}>
                 <Header />
