@@ -2,33 +2,67 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
+import Autosuggest, { SuggestionsFetchRequestedParams, SuggestionSelectedEventData } from 'react-autosuggest';
 
 interface IndexPageProps {
     bodyClass: string;
+}
+
+interface Suggestion {
+    id: string;
+    discord_id?: string;
+    discord_name: string;
+    redirectUrl: string;
+    avatarUrl: string;
 }
 
 const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
     const router = useRouter();
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+    const handleSuggestionSelected = (
+        _: React.FormEvent<any>,
+        { suggestion }: SuggestionSelectedEventData<Suggestion>
+    ) => {
+        router.push(suggestion.redirectUrl);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             // Make a POST request to the API route with the entered username
-            console.log("posting")
             const response = await axios.post('/api/search/player', { username });
-            if (response.status !== 200){
-                throw new Error("User not found.");
+            if (response.status !== 200) {
+                throw new Error('User not found.');
             }
             const { data } = response;
             await router.push(data.redirectUrl);
         } catch (error) {
             console.error(error);
-            console.log("hello");
-            setError("Error: User with this discord username does not exist in the database.");
+            setError('Error: User with this Discord username does not exist in the database.');
         }
     };
+
+    const fetchSuggestions = async (value: string) => {
+        try {
+            const response = await axios.get(`/api/search/suggestions?query=${value}`);
+            if (response.status === 200) {
+                const { data } = response;
+                setSuggestions(data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const renderSuggestion = (suggestion: Suggestion) => (
+        <div>
+            <img src={suggestion.avatarUrl} alt="Profile Picture" />
+            <span>{suggestion.discord_name} - {suggestion.avatarUrl}</span>
+        </div>
+    );
 
     return (
         <div className="wrapper">
@@ -56,23 +90,32 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                         <div className="card bg-secondary shadow border-0">
                                             <div className="card-body px-lg-5 py-lg-5">
                                                 <div className="text-center text-muted mb-4">
-                                                    <small>{ error }</small>
+                                                    <small>{error}</small>
                                                 </div>
                                                 <div>
                                                     <form onSubmit={handleSubmit} id='form'>
                                                         <div className="input-group input-group-alternative">
                                                             <div className="input-group-prepend">
-                                                              <span className="input-group-text">
-                                                                <i className="ni ni-circle-08"></i>
-                                                              </span>
+                                                            <span className="input-group-text">
+                                                              <i className="ni ni-circle-08"></i>
+                                                            </span>
                                                             </div>
-                                                            <input
-                                                                className="form-control"
-                                                                placeholder="Username"
-                                                                type="text"
-                                                                value={username}
-                                                                onChange={(e) => setUsername(e.target.value)}
+                                                            <Autosuggest<Suggestion, Suggestion>
+                                                                suggestions={suggestions}
+                                                                onSuggestionsFetchRequested={({ value }: SuggestionsFetchRequestedParams) =>
+                                                                    fetchSuggestions(value)
+                                                                }
+                                                                onSuggestionsClearRequested={() => setSuggestions([])}
+                                                                getSuggestionValue={(suggestion) => suggestion.discord_name}
+                                                                renderSuggestion={renderSuggestion}
+                                                                inputProps={{
+                                                                    placeholder: 'Username',
+                                                                    value: username,
+                                                                    onChange: (_, { newValue }) => setUsername(newValue),
+                                                                }}
+                                                                onSuggestionSelected={handleSuggestionSelected}
                                                             />
+
                                                         </div>
                                                         <div className="text-center">
                                                             <button className="btn btn-primary my-4" type='submit'>
@@ -128,7 +171,6 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 
