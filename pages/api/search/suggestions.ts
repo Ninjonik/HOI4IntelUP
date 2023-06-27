@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         // Query the database to retrieve suggestions based on the query
-        const selectQuery = 'SELECT id, discord_id, discord_name FROM players WHERE discord_name LIKE ?';
+        const selectQuery = 'SELECT id, discord_id, discord_name, rating FROM players WHERE discord_name LIKE ?';
         let suggestions : any = [];
         suggestions = await new Promise((resolve, reject) => {
             connection.query(selectQuery, [`%${query}%`], (error, results) => {
@@ -39,7 +39,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Add redirectUrl and avatarUrl to each suggestion based on the current player
             const formattedSuggestions = await Promise.all(
                 suggestions.map(async (suggestion) => {
-                    const avatarUrl = await fetchAvatar(suggestion.discord_id);
+                    // const avatarUrl = await fetchAvatar(suggestion.discord_id);
+                    const avatarUrl = "";
                     return {
                         ...suggestion,
                         redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/profile/${suggestion.id}`,

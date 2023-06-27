@@ -14,6 +14,7 @@ interface Suggestion {
     discord_name: string;
     redirectUrl: string;
     avatarUrl: string;
+    rating: number;
 }
 
 const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
@@ -58,11 +59,14 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
     };
 
     const renderSuggestion = (suggestion: Suggestion) => (
-        <div>
-            <img src={suggestion.avatarUrl} alt="Profile Picture" />
-            <span>{suggestion.discord_name} - {suggestion.avatarUrl}</span>
-        </div>
+        <tr>
+            <td >
+                <a href={suggestion.redirectUrl}><div>{suggestion.discord_name} - {suggestion.rating * 100}%</div></a>
+            </td>
+        </tr>
     );
+
+
 
     return (
         <div className="wrapper">
@@ -95,27 +99,33 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                 <div>
                                                     <form onSubmit={handleSubmit} id='form'>
                                                         <div className="input-group input-group-alternative">
-                                                            <div className="input-group-prepend">
-                                                            <span className="input-group-text">
-                                                              <i className="ni ni-circle-08"></i>
-                                                            </span>
-                                                            </div>
-                                                            <Autosuggest<Suggestion, Suggestion>
-                                                                suggestions={suggestions}
-                                                                onSuggestionsFetchRequested={({ value }: SuggestionsFetchRequestedParams) =>
-                                                                    fetchSuggestions(value)
-                                                                }
-                                                                onSuggestionsClearRequested={() => setSuggestions([])}
-                                                                getSuggestionValue={(suggestion) => suggestion.discord_name}
-                                                                renderSuggestion={renderSuggestion}
-                                                                inputProps={{
-                                                                    placeholder: 'Username',
-                                                                    value: username,
-                                                                    onChange: (_, { newValue }) => setUsername(newValue),
-                                                                }}
-                                                                onSuggestionSelected={handleSuggestionSelected}
-                                                            />
-
+                                                            <table className="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th className="text-center">Search in HOI4Intel's Database</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><Autosuggest<Suggestion, Suggestion>
+                                                                            suggestions={suggestions}
+                                                                            onSuggestionsFetchRequested={({ value }: SuggestionsFetchRequestedParams) =>
+                                                                                fetchSuggestions(value)
+                                                                            }
+                                                                            onSuggestionsClearRequested={() => setSuggestions([])}
+                                                                            getSuggestionValue={(suggestion) => suggestion.discord_name}
+                                                                            renderSuggestion={renderSuggestion}
+                                                                            inputProps={{
+                                                                                placeholder: 'Username',
+                                                                                value: username,
+                                                                                onChange: (_, { newValue }) => setUsername(newValue),
+                                                                                className: 'form-control', // Add the class here
+                                                                            }}
+                                                                            onSuggestionSelected={handleSuggestionSelected}
+                                                                        /></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                         <div className="text-center">
                                                             <button className="btn btn-primary my-4" type='submit'>
