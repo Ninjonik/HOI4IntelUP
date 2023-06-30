@@ -23,6 +23,7 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
     const handleSuggestionSelected = (
         _: React.FormEvent<any>,
@@ -75,10 +76,11 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
             <div className={`card suggestion-card ${suggestionClass}`}>
                 <Link href={suggestion.redirectUrl}>
                     <div className="card-body d-flex align-items-center">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/b/b3/Hearts_of_Iron_IV_packshot.jpg" alt="Avatar" className="avatar" />
+                        {console.log(suggestion.avatarUrl)}
+                        <img src={suggestion.avatarUrl} alt="Avatar" className="avatar" />
                         <div className="ml-3">
                             <h5 className="card-title mb-1 text-left">{suggestion.discord_name}</h5>
-                            <p className="card-text mb-0 text-left">Rating: {suggestion.rating*100}%</p>
+                            <p className="card-text mb-0 text-left">Rating: {suggestion.rating * 100}%</p>
                         </div>
                     </div>
                 </Link>
@@ -86,7 +88,17 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
         );
     };
 
-    const shouldRenderSuggestions = (value) => value.trim().length > 0;
+    const shouldRenderSuggestions = (value: string) => value.trim().length > 0;
+
+    const handleInputChange = (e: React.FormEvent<HTMLInputElement>, { newValue }: Autosuggest.ChangeEvent) => {
+        setUsername(newValue);
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        setTypingTimeout(setTimeout(() => {
+            fetchSuggestions(newValue);
+        }, 1000));
+    };
 
     return (
         <div className="wrapper">
@@ -130,14 +142,14 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                     <td>
                                                                         <Autosuggest
                                                                             suggestions={suggestions}
-                                                                            onSuggestionsFetchRequested={({ value }) => fetchSuggestions(value)}
+                                                                            onSuggestionsFetchRequested={({ value }) => {}} // Don't fetch suggestions here
                                                                             onSuggestionsClearRequested={() => setSuggestions([])}
                                                                             getSuggestionValue={(suggestion) => suggestion.discord_name}
                                                                             renderSuggestion={renderSuggestion}
                                                                             inputProps={{
                                                                                 placeholder: 'Username',
                                                                                 value: username,
-                                                                                onChange: (_, { newValue }) => setUsername(newValue),
+                                                                                onChange: handleInputChange, // Use the custom input change handler
                                                                                 className: 'form-control',
                                                                                 style: { marginBottom: '10px' }
                                                                             }}

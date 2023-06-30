@@ -12,6 +12,7 @@
     "css-loader": "latest",
     "mysql2": "^3.4.0",
     "next": "latest",
+    "node-cache": "^5.1.2",
     "postcss-loader": "latest",
     "postcss-preset-env": "^8.5.0",
     "react": "^18.2.0",
