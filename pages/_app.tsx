@@ -11,6 +11,7 @@ import '../styles/assets/css/nucleo-icons.css';
 import '../styles/assets/css/nucleo-svg.css';
 import '../styles/assets/css/font-awesome.css';
 import '../styles/assets/css/argon-design-system.css';
+import '../styles/custom.css';
 
 interface CustomAppProps extends AppProps {
     Component: NextPage & {

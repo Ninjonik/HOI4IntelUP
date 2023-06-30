@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import Autosuggest, { SuggestionsFetchRequestedParams, SuggestionSelectedEventData } from 'react-autosuggest';
+import Link from "next/link";
 
 interface IndexPageProps {
     bodyClass: string;
@@ -58,15 +59,34 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
         }
     };
 
-    const renderSuggestion = (suggestion: Suggestion) => (
-        <tr>
-            <td >
-                <a href={suggestion.redirectUrl}><div>{suggestion.discord_name} - {suggestion.rating * 100}%</div></a>
-            </td>
-        </tr>
-    );
+    const [isMounted, setIsMounted] = useState(false);
 
+    useEffect(() => {
+        setIsMounted(true);
+        return () => {
+            setIsMounted(false);
+        };
+    }, []);
 
+    const renderSuggestion = (suggestion: Suggestion) => {
+        const suggestionClass = isMounted ? 'jump-animation' : '';
+
+        return (
+            <div className={`card suggestion-card ${suggestionClass}`}>
+                <Link href={suggestion.redirectUrl}>
+                    <div className="card-body d-flex align-items-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/b/b3/Hearts_of_Iron_IV_packshot.jpg" alt="Avatar" className="avatar" />
+                        <div className="ml-3">
+                            <h5 className="card-title mb-1 text-left">{suggestion.discord_name}</h5>
+                            <p className="card-text mb-0 text-left">Rating: {suggestion.rating*100}%</p>
+                        </div>
+                    </div>
+                </Link>
+            </div>
+        );
+    };
+
+    const shouldRenderSuggestions = (value) => value.trim().length > 0;
 
     return (
         <div className="wrapper">
@@ -106,12 +126,11 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                 </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    <tr>
-                                                                        <td><Autosuggest<Suggestion, Suggestion>
+                                                                <tr>
+                                                                    <td>
+                                                                        <Autosuggest
                                                                             suggestions={suggestions}
-                                                                            onSuggestionsFetchRequested={({ value }: SuggestionsFetchRequestedParams) =>
-                                                                                fetchSuggestions(value)
-                                                                            }
+                                                                            onSuggestionsFetchRequested={({ value }) => fetchSuggestions(value)}
                                                                             onSuggestionsClearRequested={() => setSuggestions([])}
                                                                             getSuggestionValue={(suggestion) => suggestion.discord_name}
                                                                             renderSuggestion={renderSuggestion}
@@ -119,11 +138,13 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                                 placeholder: 'Username',
                                                                                 value: username,
                                                                                 onChange: (_, { newValue }) => setUsername(newValue),
-                                                                                className: 'form-control', // Add the class here
+                                                                                className: 'form-control',
+                                                                                style: { marginBottom: '10px' }
                                                                             }}
-                                                                            onSuggestionSelected={handleSuggestionSelected}
-                                                                        /></td>
-                                                                    </tr>
+                                                                            shouldRenderSuggestions={shouldRenderSuggestions}
+                                                                        />
+                                                                    </td>
+                                                                </tr>
                                                                 </tbody>
                                                             </table>
                                                         </div>
