@@ -103,7 +103,7 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
 
         setTypingTimeout(setTimeout(() => {
             fetchSuggestions(newValue);
-        }, 1000));
+        }, 200));
     };
 
 
@@ -166,7 +166,6 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                             <div className="spinner-border text-primary" role="status">
                                                                                 <span className="sr-only">Searching...</span>
                                                                             </div>
-
                                                                         )}
                                                                     </td>
                                                                 </tr>

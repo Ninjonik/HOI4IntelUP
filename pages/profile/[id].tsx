@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useRouter} from 'next/router';
-import {NextPage} from 'next';
-import {redirect} from "next/navigation";
+import { useRouter } from 'next/router';
+import { NextPage } from 'next';
+import { formatDate } from "../../libs/helpers";
 
 interface ProfilePageProps {
     bodyClass: string;
@@ -102,11 +102,11 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                         {user.games && user.games.map((game, index) => (
                                             <tr key={index}>
                                                 <td>{game["id"]}</td>
-                                                <td>{game["rating"]}</td>
+                                                <td>{game["rating"]*100}%</td>
                                                 <td>{game["country"]}</td>
                                                 <td>{game["discord_name"]}</td>
                                                 <td>{game["guild_name"]}</td>
-                                                <td>{game["updated_at"]}</td>
+                                                <td>{formatDate(game["updated_at"])}</td>
                                             </tr>
                                         ))}
                                         </tbody>

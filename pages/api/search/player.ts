@@ -3,7 +3,7 @@ import axios from 'axios';
 import connection from "../../../libs/db";
 import NodeCache from 'node-cache';
 
-const cache = new NodeCache({ stdTTL: 3600 }); // Cache expires after 1 hour (3600 seconds)
+const cache = new NodeCache({ stdTTL: 900 }); // Cache expires after 15 minutes
 
 export async function getUserByName(name) {
     return new Promise((resolve, reject) => {

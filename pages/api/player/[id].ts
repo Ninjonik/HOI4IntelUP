@@ -1,6 +1,9 @@
 import connection from  '../../../libs/db';
 import axios from "axios";
+import NodeCache from "node-cache";
 /* global BigInt */
+
+const cache = new NodeCache({ stdTTL: 1800 }); // Cache expires after 30 minutes
 
 export async function getUserById(id) {
     return new Promise((resolve, reject) => {
@@ -57,35 +60,43 @@ export default async function handler(req, res) {
     const { id } = req.query;
 
     try {
-        // Perform the necessary database query or data retrieval to fetch the user by ID
-        const user = await getUserById(id);
+        const cacheKey = `player_${id}`; // Use a different cache key for the entire suggestion
+        const cachedResult = cache.get(cacheKey); // Retrieve the cached suggestion
+        let user;
 
-        const discordId = user["discord_id"];
+        if (cachedResult) {
+            user = cachedResult;
+            console.log("Cached");
+        } else {
+            user = await getUserById(id);
 
-        const fetchAvatar = async (discordId) => {
-            try {
-                const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
-                    headers: {
-                        Authorization: `Bot ${process.env.BOT_TOKEN}`,
-                    },
-                });
+            const discordId = user["discord_id"];
 
-                return response.data;
-            } catch (error) {
-                console.error('Error fetching avatar:');
-                return null;
-            }
-        };
+            const fetchAvatar = async (discordId) => {
+                try {
+                    const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
+                        headers: {
+                            Authorization: `Bot ${process.env.BOT_TOKEN}`,
+                        },
+                    });
 
-        console.log(discordId, "nice");
-        const data = await fetchAvatar(discordId);
-        const stats = await getUserStats(discordId);
-        const games = await getUserGames(discordId);
-        user["avatar"] = `https://cdn.discordapp.com/avatars/${discordId}/${data.avatar}.png`;
-        user["discord_name"] = data["username"];
-        user["stats"] = stats ? stats["count"] : 0;
-        user["games"] = games ? games : [];
-        console.log(user);
+                    return response.data;
+                } catch (error) {
+                    console.error('Error fetching avatar:');
+                    return null;
+                }
+            };
+
+            const data = await fetchAvatar(discordId);
+            const stats = await getUserStats(discordId);
+            const games = await getUserGames(discordId);
+            user["avatar"] = `https://cdn.discordapp.com/avatars/${discordId}/${data.avatar}.png`;
+            user["discord_name"] = data["username"];
+            user["stats"] = stats ? stats["count"] : 0;
+            user["games"] = games ? games : [];
+            cache.set(cacheKey, user); // Cache the entire suggestion
+            console.log("Cache set");
+        }
 
         // Return the user data as a JSON response
         return res.status(200).json(user);
