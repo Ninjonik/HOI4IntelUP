@@ -24,6 +24,7 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
     const [error, setError] = useState('');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
     const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSuggestionSelected = (
         _: React.FormEvent<any>,
@@ -58,7 +59,9 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
         } catch (error) {
             console.error(error);
         }
+        setIsLoading(false); // Set loading state to false after fetching suggestions
     };
+
 
     const [isMounted, setIsMounted] = useState(false);
 
@@ -95,10 +98,14 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
         if (typingTimeout) {
             clearTimeout(typingTimeout);
         }
+
+        setIsLoading(true); // Set loading state to true immediately
+
         setTypingTimeout(setTimeout(() => {
             fetchSuggestions(newValue);
         }, 1000));
     };
+
 
     return (
         <div className="wrapper">
@@ -155,6 +162,12 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                             }}
                                                                             shouldRenderSuggestions={shouldRenderSuggestions}
                                                                         />
+                                                                        {isLoading && (
+                                                                            <div className="spinner-border text-primary" role="status">
+                                                                                <span className="sr-only">Searching...</span>
+                                                                            </div>
+
+                                                                        )}
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>

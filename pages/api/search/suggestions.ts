@@ -1,48 +1,31 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import {NextApiRequest, NextApiResponse} from 'next';
 import connection from "../../../libs/db";
 import axios from "axios";
 import NodeCache from 'node-cache';
 
-const cache = new NodeCache({ stdTTL: 3600 }); // Cache expires after 1 hour (3600 seconds)
+const cache = new NodeCache({ stdTTL: 900 }) // Cache expires after 1 hour (3600 seconds)
 
 const fetchAvatar = async (discordId) => {
-    // TODO: Make cache work
-    const cacheKey = `avatar_${discordId}`;
-    const cachedResult = cache.get<string>(cacheKey);
-    if (cachedResult) {
-        console.log("Cached result ", cachedResult);
-        return cachedResult;
-    }
     try {
         const response = await axios.get(`https://discord.com/api/users/${discordId}`, {
             headers: {
                 Authorization: `Bot ${process.env.BOT_TOKEN}`,
             },
         });
-
-        const avatarUrl = response.data.avatarUrl;
-
-        // Cache the avatar URL
-        cache.set(cacheKey, avatarUrl);
-
-        console.log(response.data);
-
-        return response.data;
+        return response.data.avatar;
     } catch (error) {
         console.error('Error fetching avatar, DiscordId: ', discordId);
-        // console.log(error);
         return null;
     }
 };
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { query } = req.query;
 
     try {
         // Query the database to retrieve suggestions based on the query
-        const selectQuery = 'SELECT id, CAST(discord_id AS CHAR) AS discord_id, discord_name, rating FROM players WHERE discord_name LIKE ? LIMIT 5';
-        let suggestions : any = [];
+        const selectQuery = 'SELECT id, CAST(discord_id AS CHAR) AS discord_id, discord_name, rating FROM players WHERE discord_name LIKE ? LIMIT 10';
+        let suggestions: any = [];
         suggestions = await new Promise((resolve, reject) => {
             connection.query(selectQuery, [`%${query}%`], (error, results) => {
                 if (error) {
@@ -58,11 +41,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const formattedSuggestions = await Promise.all(
                 suggestions.map(async (suggestion) => {
                     const discordId = String(suggestion.discord_id);
-                    const avatarUrl = await fetchAvatar(discordId);
+                    const cacheKey = `avatar_${discordId}`;
+                    const cachedResult = cache.get<string>(cacheKey);
+                    let avatar: string;
+                    if (cachedResult) {
+                        avatar = cachedResult;
+                        console.log("cached");
+                    } else {
+                        avatar = await fetchAvatar(discordId);
+                        cache.set(cacheKey, avatar);
+                        console.log("cache set");
+                    }
                     return {
                         ...suggestion,
                         redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/profile/${suggestion.id}`,
-                        avatarUrl: `https://cdn.discordapp.com/avatars/${discordId}/${avatarUrl.avatar}.png`,
+                        avatarUrl: `https://cdn.discordapp.com/avatars/${discordId}/${avatar}.png`,
                     };
                 })
             );
