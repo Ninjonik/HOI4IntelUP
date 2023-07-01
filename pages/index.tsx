@@ -154,7 +154,7 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
                                                                             getSuggestionValue={(suggestion) => suggestion.discord_name}
                                                                             renderSuggestion={renderSuggestion}
                                                                             inputProps={{
-                                                                                placeholder: 'Username',
+                                                                                placeholder: 'Discord Username',
                                                                                 value: username,
                                                                                 onChange: handleInputChange, // Use the custom input change handler
                                                                                 className: 'form-control',
