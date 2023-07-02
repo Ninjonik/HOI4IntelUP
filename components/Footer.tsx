@@ -23,7 +23,7 @@ const Footer = () => {
                         <a rel="nofollow" href="https://discord.gg/world-war-community-820918304176340992" target="_blank"
                            className="btn btn-icon-only btn-github rounded-circle" data-toggle="tooltip"
                            data-original-title="Join Discord">
-                            <span className="btn-inner--icon"><i className="fa-brands fa-discord"></i></span>
+                            <span className="btn-inner--icon"><i className="fa fa-phone"></i></span>
                         </a>
                     </div>
                 </div>
