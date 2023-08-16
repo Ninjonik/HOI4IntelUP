@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         const avatar = await fetchAvatar(discordId);
                         formattedSuggestion = {
                             ...suggestion,
-                            redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/profile/${suggestion.id}`,
+                            redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/profile/${suggestion.discord_id}`,
                             avatarUrl: `https://cdn.discordapp.com/avatars/${discordId}/${avatar}.png`,
                         };
 

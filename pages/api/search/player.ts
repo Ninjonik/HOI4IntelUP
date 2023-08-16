@@ -7,7 +7,7 @@ const cache = new NodeCache({ stdTTL: 900 }); // Cache expires after 15 minutes
 
 export async function getUserByName(name) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT id FROM players WHERE discord_name = ?';
+        const query = 'SELECT discord_id FROM players WHERE discord_name = ?';
         connection.query(query, [name], (error, results) => {
             if (error) {
                 reject(error);
@@ -27,8 +27,9 @@ export default async function searchUser(req: NextApiRequest, res: NextApiRespon
             // Perform the search in the players table using the `discord_name` field
             // Replace this code with your actual database query
             const player = await getUserByName(username);
+            console.log(player);
 
-            if (player && player['id']) {
+            if (player && player['discord_id']) {
                 // Check if the result is already cached
                 const cacheKey = `searchUser_${username}`;
                 const cachedResult = cache.get(cacheKey);
@@ -38,7 +39,7 @@ export default async function searchUser(req: NextApiRequest, res: NextApiRespon
                 }
 
                 // If a matching player is found, construct the redirect URL
-                const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL}/profile/${player['id']}`;
+                const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL}/profile/${player['discord_id']}`;
 
                 // Cache the result
                 const result = { redirectUrl };

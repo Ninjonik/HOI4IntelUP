@@ -7,7 +7,7 @@ const cache = new NodeCache({ stdTTL: 1800 }); // Cache expires after 30 minutes
 
 export async function getUserById(id) {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT *, CAST(discord_id AS CHAR) AS discord_id FROM players WHERE id = ?';
+        const query = 'SELECT *, CAST(discord_id AS CHAR) AS discord_id FROM players WHERE discord_id = ?';
         connection.query(query, [id], (error, results) => {
             if (error) {
                 reject(error);
