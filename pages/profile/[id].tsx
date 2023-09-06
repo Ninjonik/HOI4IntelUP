@@ -82,7 +82,7 @@ const ProfilePage: NextPage<ProfilePageProps> & { bodyClass?: string } = () => {
                                 </div>
                             </div>
                             <div className="text-center mt-5">
-                                <h3>{user.discord_name}<span className="font-weight-light"> {user.rating*100}%</span></h3>
+                                <h3>{user.discord_name}<span className="font-weight-light"> {Math.round(user.rating*100)}%</span></h3>
                                 <div className="h6 font-weight-300"><i className="ni location_pin mr-2"></i>{user.discord_id}</div>
                             </div>
                             <div className="mt-5 py-5 border-top text-center">

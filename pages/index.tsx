@@ -79,11 +79,10 @@ const IndexPage: NextPage<IndexPageProps> & { bodyClass?: string } = () => {
             <div className={`card suggestion-card ${suggestionClass}`}>
                 <Link href={suggestion.redirectUrl}>
                     <div className="card-body d-flex align-items-center">
-                        {console.log(suggestion.avatarUrl)}
                         <img src={suggestion.avatarUrl} alt="Avatar" className="avatar" />
                         <div className="ml-3">
                             <h5 className="card-title mb-1 text-left">{suggestion.discord_name}</h5>
-                            <p className="card-text mb-0 text-left">Rating: {suggestion.rating * 100}%</p>
+                            <p className="card-text mb-0 text-left">Rating: {Math.round(suggestion.rating * 100)}%</p>
                         </div>
                     </div>
                 </Link>
