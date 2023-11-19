@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start -p 4000 -H db.theorganization.eu",
+    "start": "next start -p 4000 -H db.igportals.eu",
     "type-check": "tsc"
   },
   "dependencies": {

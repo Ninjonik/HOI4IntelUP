@@ -10,7 +10,7 @@ const Footer = () => {
                         <h4 className="mb-0 font-weight-light">Let's get in touch on any of these platforms.</h4>
                     </div>
                     <div className="col-lg-6 text-lg-center btn-wrapper">
-                        <a rel="nofollow" href="https://hoi.theorganization.eu/" target="_blank"
+                        <a rel="nofollow" href="https://hoi.igportals.eu/" target="_blank"
                                 className="btn btn-icon-only btn-dribbble rounded-circle" data-toggle="tooltip"
                                 data-original-title="Check the main page">
                             <span className="btn-inner--icon"><i className="fa fa-dribbble"></i></span>
