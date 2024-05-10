@@ -1,5 +1,5 @@
 Public Database for HOI4Intel
-Built using NextJS 13 + Tailwind
+Built using NextJS 14 + Tailwind
 
 ## Contributing
 
