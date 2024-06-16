@@ -1,3 +1,5 @@
+# NOT MAINTAINING
+
 Public Database for HOI4Intel
 Built using NextJS 14 + Tailwind
 
